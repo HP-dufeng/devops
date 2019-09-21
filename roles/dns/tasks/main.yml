@@ -1,0 +1,11 @@
+---
+- name: Setup hostname
+  include_tasks: setup_hostname.yml
+
+- name: Install dns 
+  include_tasks: install_dns.yml
+  when: dns_role is defined and dns_role == 'dns_server'
+
+- name: Setup dns
+  include_tasks: setup_dns.yml
+

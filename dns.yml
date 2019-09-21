@@ -1,0 +1,4 @@
+- name: Setup dns service
+  hosts: dns
+  roles:
+    - dns

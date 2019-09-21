@@ -1,0 +1,12 @@
+---
+- src: cloudalchemy.coredns
+
+- src: mrlesmithjr.netplan
+
+- src: geerlingguy.gitlab
+
+- src: geerlingguy.docker
+
+- src: geerlingguy.java
+- src: geerlingguy.apache
+- src: ansible-ThoTeam.nexus3-oss

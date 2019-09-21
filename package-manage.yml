@@ -1,0 +1,19 @@
+- name: Nexus
+  hosts: nexus
+  become: yes
+    
+  roles:
+    - { role: geerlingguy.java, become: yes, java_packages: openjdk-8-jdk }
+    # Debian/Ubuntu only
+    - { role: geerlingguy.apache, apache_mods_enabled: ["proxy.load", "proxy_http.load", "ssl.load", "rewrite.load", "headers.load"], tags: ["geerlingguy.apache"] }
+    - role: ansible-ThoTeam.nexus3-oss
+      tags: ['ansible-ThoTeam.nexus3-oss']
+      nexus_timezone: 'Asia/Shanghai'
+      nexus_admin_password: '111111'
+      nexus_public_hostname: "nexus.fengdu.com"
+      httpd_setup_enable: true
+      httpd_default_admin_email: "fengdu_xiangyang@163.com"
+      httpd_ssl_certificate_file: '{{ cert }}'
+      httpd_ssl_certificate_key_file: '{{ cert_key }}'
+      nexus_config_docker: false
+      nexus_config_npm: true

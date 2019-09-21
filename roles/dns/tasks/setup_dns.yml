@@ -1,0 +1,27 @@
+---
+- name: Setup dns
+  any_errors_fatal: true
+  become: yes
+  import_role:
+    name: mrlesmithjr.netplan
+  vars:
+    # This role will do nothing unless netplan_enabled is true.
+    netplan_enabled: true
+    # The default is /etc/netplan/config.yaml.
+    # netplan_config_file: /etc/netplan/my-awesome-netplan.yaml
+    # Ubuntu 18.04, for example, defaults to using networkd.
+    netplan_renderer: networkd
+    # Simple network configuration to add a single network
+    # interface.
+    netplan_configuration:
+      network:
+        version: 2
+        ethernets:
+          eth0:
+            dhcp4: no
+            gateway4: "{{ gateway }}"
+            addresses:
+              - "{{ ansible_host }}/24"
+            nameservers:
+              addresses: 
+                - "{{ nameserver }}"

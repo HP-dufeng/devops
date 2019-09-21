@@ -1,0 +1,21 @@
+fengdu.cloud {
+  hosts {
+    
+    {% for host in groups['dns'] %}
+      {{ hostvars[host]['ansible_host'] }} {{ hostvars[host]['hostname'] }}
+    {% endfor %}
+
+    fallthrough
+  }
+
+  forward . 192.168.1.1
+  log
+  errors
+}
+
+. {
+  forward . 192.168.1.1
+  log
+  errors
+}
+

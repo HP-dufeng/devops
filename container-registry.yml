@@ -1,0 +1,7 @@
+- name: Setup harbor container registry
+  hosts: harbor
+  vars:
+    certificate: '{{ cert }}'
+    certificate_key: '{{ cert_key }}'
+  roles:
+    - container-registry

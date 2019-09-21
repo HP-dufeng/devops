@@ -1,0 +1,5 @@
+---
+- include_tasks: setup-Debian.yml
+
+- name: Install docker
+  include_tasks: docker-setup.yml

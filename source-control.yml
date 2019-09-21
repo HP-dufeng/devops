@@ -1,0 +1,9 @@
+- hosts: gitlab
+  vars:
+    - gitlab_external_url: "https://{{ hostname }}"
+    - gitlab_redirect_http_to_https: "true"
+    - gitlab_ssl_certificate: "{{ cert }}"
+    - gitlab_ssl_certificate_key: "{{ cert }}"
+    - gitlab_time_zone: "Asia/Shanghai"
+  roles:
+    - { role: geerlingguy.gitlab }

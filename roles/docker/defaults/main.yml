@@ -1,0 +1,5 @@
+---
+docker_version: "18.06.2~ce~3-0~ubuntu"
+
+docker_apt_repository: "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu bionic stable"
+docker_apt_ignore_key_error: false

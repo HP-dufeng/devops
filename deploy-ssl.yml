@@ -1,0 +1,31 @@
+---
+- name: Deploy ssl, that is k8s dashboad needed
+  hosts: k8s
+  tasks:
+    - copy: 
+        src: "{{ item }}"
+        dest: "/certs/"
+      with_items:
+        - "{{ cert }}"
+        - "{{ cert_key }}"
+
+- name: Deploy ssl, that is k8s dashboad needed
+  hosts: harbor
+  tasks:
+    - copy: 
+        src: "{{ item }}"
+        dest: "/certs/"
+      with_items:
+        - "{{ cert }}"
+        - "{{ cert_key }}"
+
+# - name: Deploy ssl to server 
+#   hosts: dns
+#   tasks:
+#     - copy: 
+#         src: "files/certs/fengdu.cloud.pem"
+#         dest: "/etc/ssl/certs"
+#     - copy: 
+#         src: "files/certs/fengdu.cloud.privatekey.pem"
+#         dest: "/etc/ssl/private"
+#     - command: update-ca-certificates

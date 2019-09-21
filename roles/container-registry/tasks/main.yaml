@@ -1,0 +1,32 @@
+---
+- name: Install docker
+  import_role:
+    name: geerlingguy.docker
+  
+- name: check if harbor tgz file exists
+  stat: 
+    path: /harbor/harbor.v1.9.0.tar.gz
+  register: harbor_tgz_file
+- name: debug harbor output
+  debug: {msg: '{{harbor_tgz_file.stat}}'}
+- name: Unarchive after downloaded harbor-offline-installer-v1.9.0.tgz
+  unarchive:
+    src: https://storage.googleapis.com/harbor-releases/release-1.9.0/harbor-offline-installer-v1.9.0.tgz
+    dest: /
+    remote_src: yes
+  when: harbor_tgz_file.stat.exists == false
+
+- name: Copy harbor config file to server
+  template:
+    src: harbor.yml.j2
+    dest: /harbor/harbor.yml
+
+- name: Install using script
+  command: ./install.sh 
+  become: yes
+  args:
+    chdir: /harbor
+#   register: out
+
+# - debug:
+#     msg: "{{ out.stdout }}"
