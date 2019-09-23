@@ -1,0 +1,26 @@
+{
+    "clusters": [
+        {
+            "nodes": [
+                {% for host in groups['glusterfs'] %}
+                    {
+                        "node": {
+                            "hostnames": {
+                                "manage": [
+                                    "{{ hostvars[host]['hostname'] }}"
+                                ],
+                                "storage": [
+                                    "{{ hostvars[host]['ansible_host'] }}"
+                                ]
+                            },
+                            "zone": 1
+                        },
+                        "devices": [
+                            "/dev/sdb"
+                        ]
+                    }{{ '' if loop.last else ',' }}
+                {% endfor %}          
+            ]
+        }
+    ]
+}

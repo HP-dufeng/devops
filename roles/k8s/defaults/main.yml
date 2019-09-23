@@ -11,6 +11,8 @@ kubernetes_packages:
 
 kubernetes_version: '1.16'
 
+glusterfs_ppa_version: "6"
+
 kubernetes_role: master
 
 kubernetes_kubelet_extra_args: ""

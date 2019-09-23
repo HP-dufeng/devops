@@ -34,3 +34,20 @@
     path: /etc/fstab
     regexp: '^(.+?\sswap\s+sw\s+.*)$'
     replace: '# \1'
+
+# Install glusterfs-client used for mount glusterfs volumes
+- name: Ensure PPA for GlusterFS is present.
+  apt_repository:
+    repo: 'ppa:gluster/glusterfs-{{ glusterfs_ppa_version }}'
+    state: present
+    update_cache: true
+  register: glusterfs_ppa_added
+  when: glusterfs_ppa_use
+
+- name: Ensure GlusterFS will reinstall if the PPA was just added.
+  apt:
+    name:
+      - glusterfs-client
+    state: absent
+  when: glusterfs_ppa_added.changed
+  tags: ['skip_ansible_lint']

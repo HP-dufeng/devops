@@ -1,0 +1,7 @@
+- name: Install Heketi
+  hosts: gluster1
+  vars:
+    certificate: '{{ cert }}'
+    certificate_key: '{{ cert_key }}'
+  roles:
+    - heketi

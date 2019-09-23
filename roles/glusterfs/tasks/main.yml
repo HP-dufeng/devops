@@ -1,0 +1,47 @@
+---
+- name: Ensure dependencies are installed.
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - thin-provisioning-tools
+    state: present
+
+- name: Ensure PPA for GlusterFS is present.
+  apt_repository:
+    repo: 'ppa:gluster/glusterfs-{{ glusterfs_ppa_version }}'
+    state: present
+    update_cache: true
+  register: glusterfs_ppa_added
+  when: glusterfs_ppa_use
+
+- name: Ensure GlusterFS will reinstall if the PPA was just added.
+  apt:
+    name:
+      - glusterfs-server
+      - glusterfs-client
+    state: absent
+  when: glusterfs_ppa_added.changed
+  tags: ['skip_ansible_lint']
+
+- name: Ensure GlusterFS is installed.
+  apt:
+    name:
+      - glusterfs-server
+      - glusterfs-client
+    state: present
+    default_release: "{{ glusterfs_default_release }}"
+
+- name: Ensure GlusterFS is started and enabled at boot.
+  service: "name={{ glusterfs_daemon }} state=started enabled=yes"
+
+#  comment this, because we use heketi to manage glusterfs cluster nodes
+# - name: Gluster peer probe 
+#   include_tasks: peer.yml
+
+- command: systemctl status {{ glusterfs_daemon }}
+  register: glusterd_service_status
+- debug:
+    msg: "{{ glusterd_service_status.stdout_lines }}"

@@ -1,0 +1,55 @@
+---
+- name: check if heketi tgz file exists
+  stat: 
+    path: /usr/bin/heketi
+  register: heketi_tar_file
+
+- name: Download Heketi
+  include_tasks: download-heketi.yml
+  when: heketi_tar_file.stat.exists == false
+
+- set_fact:
+    env_files: 
+      - src: heketi.env.j2
+        dest: /etc/heketi/heketi.env
+      - src: heketi.json.j2
+        dest: /etc/heketi/heketi.json
+
+- name: Heketi | Create WorkingDirectory for heketi service
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - "/var/lib/heketi"
+    - "/etc/heketi"
+
+- name: Heketi | Create topology.json file
+  template: src=topology.json.j2 dest=/var/lib/heketi/topology.json mode=644
+
+- name: Heketi | Create environment file
+  template: src="{{item.src}}" dest="{{item.dest}}"
+  register: heketi_config_file
+  with_items: "{{ env_files }}"
+
+- name: Heketi | Create Unit file
+  template: src=heketi.service.j2 dest=/lib/systemd/system/heketi.service mode=644
+  notify:
+    - reload systemctl
+
+
+
+- name: Heketi | Ensure Heketi is started and enabled at boot.
+  service: "name=heketi state=started enabled=yes"
+
+- systemd:
+    state: restarted
+    daemon_reload: yes
+    name: heketi
+  when: heketi_config_file is changed
+
+- command: systemctl status heketi
+  register: heketi_service_status
+- debug:
+    msg: "{{ heketi_service_status.stdout_lines }}"
+

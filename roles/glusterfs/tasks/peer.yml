@@ -1,0 +1,16 @@
+---
+- name: Join node to cluster
+  command: "gluster peer probe {{ hostvars[item]['hostname'] }}"
+  # debug: 
+  #   msg: "{{ hostvars[item]['ansible_host'] }}"
+  with_items: "{{ groups['glusterfs'] }}"
+  when: glusterfs_role is defined and glusterfs_role == 'master'
+
+- name: Output Gluster peer status
+  command: "gluster peer status"
+  register: out
+  when: glusterfs_role is defined and glusterfs_role == 'master'
+  
+- debug: 
+    msg: "{{ out.stdout_lines }}"
+  when: glusterfs_role is defined and glusterfs_role == 'master'
