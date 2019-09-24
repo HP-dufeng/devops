@@ -10,3 +10,5 @@
 - src: geerlingguy.java
 - src: geerlingguy.apache
 - src: ansible-ThoTeam.nexus3-oss
+
+- src: nginxinc.nginx

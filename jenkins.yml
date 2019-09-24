@@ -1,0 +1,7 @@
+- name: Install Jenkins
+  hosts: jenkins
+  become: yes
+  roles:
+    - { role: geerlingguy.java, become: yes, java_packages: openjdk-8-jdk }
+    - jenkins
+  

@@ -1,0 +1,24 @@
+---
+- include_tasks: setup-Debian.yml
+
+- name: "Install NGINX"
+  package:
+    name: nginx
+    state: present
+  notify: restart nginx
+
+- import_tasks: configure.yml
+  become: true
+
+- name: Ensure Nginx is enabled on boot
+  become: true
+  systemd:
+    daemon_reload: true
+    name: nginx
+    enabled: true
+    state: started
+
+- command: systemctl status nginx
+  register: nginx_service_status
+- debug:
+    msg: "{{ nginx_service_status.stdout_lines }}"

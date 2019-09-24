@@ -1,0 +1,9 @@
+---
+- name: Copy configuration file
+  template:
+    src: "{{ nginx_config_file }}"
+    dest: /etc/nginx/conf.d/default.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart nginx

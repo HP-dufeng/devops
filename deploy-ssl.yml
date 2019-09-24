@@ -1,13 +1,23 @@
 ---
-- name: Deploy ssl, that is k8s dashboad needed
-  hosts: k8s harbor gluster1
+# - name: Deploy ssl, that is k8s dashboad needed
+#   hosts: k8s harbor gluster1
+#   tasks:
+#     - copy: 
+#         src: "{{ item }}"
+#         dest: "/certs/"
+#       with_items:
+#         - "./certs/fengdu.cloud.pem"
+#         - "./certs/fengdu.cloud.privatekey.pem"
+
+- name: Deploy ssl
+  hosts: jenkins
   tasks:
     - copy: 
-        src: "{{ item }}"
-        dest: "/certs/"
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
       with_items:
-        - "./certs/fengdu.cloud.pem"
-        - "./certs/fengdu.cloud.privatekey.pem"
+        - "{{ ssl_cert }}"
+        - "{{ ssl_key }}"
 
 # - name: Deploy ssl, that is k8s dashboad needed
 #   hosts: harbor

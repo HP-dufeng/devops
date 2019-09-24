@@ -1,0 +1,36 @@
+---
+- include_tasks: setup-Debian.yml
+
+- name: Install Jenkins package
+  apt:
+    name:
+      - jenkins
+    state: present
+
+- name: Ensure Jenkins is started and enabled at boot.
+  service: "name=jenkins state=started enabled=yes"
+
+
+- command: systemctl status jenkins
+  register: jenkins_service_status
+- debug:
+    msg: "{{ jenkins_service_status.stdout_lines }}"
+
+- name: Creates Jenkins logs directory
+  file:
+    path: /var/log/nginx/jenkins
+    state: directory
+    recurse: yes
+
+- name: Install Nginx
+  import_role:
+    name: nginx
+  vars:
+    nginx_config_file: 'templates/jenkins-nginx.conf.j2'
+
+- name: To give nginx permission to read Jenkins web root folder, add nginx to jenkins group
+  user:
+    name: nginx
+    groups: jenkins
+    append: yes
+  notify: restart nginx
